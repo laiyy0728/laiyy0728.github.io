@@ -1,0 +1,316 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet"><style>.pace .pace-progress{background:#1e92fb;height:3px}.pace .pace-progress-inner{box-shadow:0 0 10px #1e92fb,0 0 5px #1e92fb}.pace .pace-activity{border-top-color:#1e92fb;border-left-color:#1e92fb}</style><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4"><link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222"><link rel="manifest" href="/images/manifest.json"><meta name="keywords" content="SpringCloud,Ribbon,"><link rel="alternate" href="/atom.xml" title="Laiyy 的个人小站" type="application/atom+xml"><meta name="description" content="通常所说的负载均衡，一般来说都是在服务器端使用 Ngnix 或 F5 做 Server 的负载均衡策略，在 Ribbon 中提到的负载均衡，一般来说是指的客户端负载均衡，即 ServiceA 调用 ServiceB，有多个 ServiceB 的情况下，由 ServiceA 选择调用哪个 ServiceB。"><meta name="keywords" content="SpringCloud,Ribbon"><meta property="og:type" content="article"><meta property="og:title" content="Spring Cloud 微服务（11） --- Ribbon(一) &lt;BR&gt; 负载均衡与 Ribbon"><meta property="og:url" content="https://www.laiyy.top/spring-cloud/spring-cloud-11.html"><meta property="og:site_name" content="Laiyy 的个人小站"><meta property="og:description" content="通常所说的负载均衡，一般来说都是在服务器端使用 Ngnix 或 F5 做 Server 的负载均衡策略，在 Ribbon 中提到的负载均衡，一般来说是指的客户端负载均衡，即 ServiceA 调用 ServiceB，有多个 ServiceB 的情况下，由 ServiceA 选择调用哪个 ServiceB。"><meta property="og:locale" content="zh-Hans"><meta property="og:image" content="https://www.laiyy.top/images/spring-cloud/ribbon/ribbon-1.png"><meta property="og:image" content="https://www.laiyy.top/images/spring-cloud/ribbon/ribbon-2.png"><meta property="og:updated_time" content="2019-01-25T06:57:14.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Spring Cloud 微服务（11） --- Ribbon(一) &lt;BR&gt; 负载均衡与 Ribbon"><meta name="twitter:description" content="通常所说的负载均衡，一般来说都是在服务器端使用 Ngnix 或 F5 做 Server 的负载均衡策略，在 Ribbon 中提到的负载均衡，一般来说是指的客户端负载均衡，即 ServiceA 调用 ServiceB，有多个 ServiceB 的情况下，由 ServiceA 选择调用哪个 ServiceB。"><meta name="twitter:image" content="https://www.laiyy.top/images/spring-cloud/ribbon/ribbon-1.png"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.4",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://www.laiyy.top/spring-cloud/spring-cloud-11.html"><title>Spring Cloud 微服务（11） --- Ribbon(一)<br> 负载均衡与 Ribbon | Laiyy 的个人小站</title><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></head><body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div> <a href="https://github.com/laiyy0728" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513;color:#fff;position:absolute;top:0;border:0;right:0" aria-hidden="true"><path d="M0 0 115 115 130 115 142 142 250 250 250 0Z"/><path d="M128.3 109C113.8 99.7 119 89.6 119 89.6 122 82.7 120.5 78.6 120.5 78.6 119.2 72 123.4 76.3 123.4 76.3 127.3 80.9 125.5 87.3 125.5 87.3 122.9 97.6 130.6 101.9 134.4 103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"/><path d="M115 115C114.9 115.1 118.7 116.5 119.8 115.4L133.7 101.6C136.9 99.2 139.9 98.4 142.2 98.6 133.8 88 127.5 74.4 143.8 58 148.5 53.4 154 51.2 159.7 51 160.3 49.4 163.2 43.6 171.4 40.1 171.4 40.1 176.1 42.5 178.8 56.2 183.1 58.6 187.2 61.8 190.9 65.4 194.5 69 197.7 73.2 200.1 77.6 213.8 80.2 216.3 84.9 216.3 84.9 212.7 93.1 206.9 96 205.4 96.6 205.1 102.4 203 107.8 198.3 112.5 181.9 128.9 168.3 122.5 157.7 114.1 157.9 116.9 156.7 120.9 152.7 124.9L141 136.5C139.8 137.7 141.6 141.9 141.8 141.8Z" fill="currentColor" class="octo-body"/></svg></a><header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Laiyy 的个人小站</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-关于我"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于我</a></li><li class="menu-item menu-item-标签"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-分类"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-归档"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://www.laiyy.top/spring-cloud/spring-cloud-11.html"><span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person"><meta itemprop="name" content="Laiyy"><meta itemprop="description" content=""><meta itemprop="image" content="/images/icon.jpg"></span><span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization"><meta itemprop="name" content="Laiyy 的个人小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Spring Cloud 微服务（11） --- Ribbon(一)<br> 负载均衡与 Ribbon</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-25T14:57:14+08:00">2019-01-25</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/spring-cloud/" itemprop="url" rel="index"><span itemprop="name">spring-cloud</span></a></span></span><div class="post-wordcount"> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">2k 字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">8 分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>通常所说的负载均衡，一般来说都是在服务器端使用 Ngnix 或 F5 做 Server 的负载均衡策略，在 Ribbon 中提到的负载均衡，一般来说是指的<code>客户端负载均衡</code>，即 ServiceA 调用 ServiceB，有多个 ServiceB 的情况下，由 ServiceA 选择调用哪个 ServiceB。</p><a id="more"></a><h1 id="负载均衡与-Ribbon"><a href="#负载均衡与-Ribbon" class="headerlink" title="负载均衡与 Ribbon"></a>负载均衡与 Ribbon</h1><p>负载均衡(Load Balance)，是一种利用特定方式，将流量分摊到多个操作单元上的手段，它对系统吞吐量、系统处理能力有着质的提升。最常见的负载均衡分类方式有：软负载、硬负载，对应 Ngnix、F5；集中式负载均衡、进程内负载均衡。集中式负载均衡是指位于网络和服务提供者之间，并负责把忘了请求转发到各个提供单位，代表产品有 Ngnix、F5；进程负载均衡是指从一个实例库选取一个实例进行流量导入，在微服务范畴，实例库一般是存储在 Eureka、Consul、Zookeeper 等注册中心，此时的负载均衡器类似 Ribbon 的 IPC（进程间通信）组件，因此进程内负载均衡也叫做客户端负载均衡。</p><p>Ribbon 是一个客户端负载均衡器，赋予了应用一些支配 HTTP 与 TCP 行为的能力，由此可以得知，这里的客户端负载均衡也是进程内负载均衡的一周。 Ribbon 在 SpringCloud 生态内的不可缺少的组件，没有了 Ribbon，服务就不能横向扩展。Feign、Zuul 已经集成了 Ribbon。</p><hr><h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p>Eureka Server 不再赘述，可以直接使用 <code>spring-cloud-eureka-server-simple</code>。</p><h2 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h2><p><strong><em>源码：<a href="https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-consumer" target="_blank" rel="noopener">https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-consumer</a></em></strong></p><p>yml：<br></p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">spring-cloud-ribbon-consumer</span></span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line"><span class="attr">  port:</span> <span class="number">9999</span></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://localhost:8761/eureka</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    prefer-ip-address:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    instance-id:</span> <span class="string">$&#123;spring.application.name&#125;:$&#123;server.port&#125;</span></span><br></pre></td></tr></table></figure><p></p><p>配置类：<br></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@LoadBalanced</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><p><code>@LoadBalanced</code>：对 RestTemplate 启动负载均衡</p><p>Consumer Controller<br></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RestTemplate restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsumerController</span><span class="params">(RestTemplate restTemplate)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.restTemplate = restTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(value = <span class="string">"/check"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">checkRibbonProvider</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> restTemplate.getForObject(<span class="string">"http://spring-cloud-ribbon-provider/check"</span>, String.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h2 id="provider"><a href="#provider" class="headerlink" title="provider"></a>provider</h2><p><strong><em>源码：<a href="https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-provider" target="_blank" rel="noopener">https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-provider</a></em></strong></p><p>pom 依赖：<br></p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-eureka-client<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-netflix-ribbon<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure><p></p><p>配置文件：<br></p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line"><span class="attr">  application:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">spring-cloud-ribbon-provider</span></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka:</span></span><br><span class="line"><span class="attr">  client:</span></span><br><span class="line"><span class="attr">    service-url:</span></span><br><span class="line"><span class="attr">      defaultZone:</span> <span class="attr">http://localhost:8761/eureka</span></span><br><span class="line"><span class="attr">  instance:</span></span><br><span class="line"><span class="attr">    prefer-ip-address:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    instance-id:</span> <span class="string">$&#123;spring.application.name&#125;:$&#123;server.port&#125;</span></span><br></pre></td></tr></table></figure><p></p><p>ProviderContr<br></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProviderController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;server.port&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span>(value = <span class="string">"/check"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">providerPort</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Provider Port: "</span> + port;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p></p><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>分别启动 Eureka Server、Consumer、Provider，其中，Provider 以 mvn 形式启动，绑定不同的端口号：<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mvn spring-boot:run -Dserver.port=8080</span><br><span class="line">mvn spring-boot:run -Dserver.port=8081</span><br></pre></td></tr></table></figure><p></p><p>postman 访问 Consumer<br><img src="/images/spring-cloud/ribbon/ribbon-1.png" alt="第一次请求"><br><img src="/images/spring-cloud/ribbon/ribbon-2.png" alt="第二次请求"></p><p>可以看到，Provider 两次返回值不一样，验证了负载均衡成功。</p><hr><h1 id="负载均衡策略"><a href="#负载均衡策略" class="headerlink" title="负载均衡策略"></a>负载均衡策略</h1><p>Ribbon 中提供了 <code>七种</code> 负载均衡策略</p><table><thead><tr><th style="text-align:center">策略类</th><th style="text-align:center">命名</th><th style="text-align:center">描述</th></tr></thead><tbody><tr><td style="text-align:center">RandomRule</td><td style="text-align:center">随机策略</td><td style="text-align:center">随机选择 Server</td></tr><tr><td style="text-align:center">RoundRobinRule</td><td style="text-align:center">轮询策略</td><td style="text-align:center">按照顺序循环选择 Server</td></tr><tr><td style="text-align:center">RetryRule</td><td style="text-align:center">重试策略</td><td style="text-align:center">在一个配置时间段内，当选择的 Server 不成功，则一直尝试选择一个可用的 Server</td></tr><tr><td style="text-align:center">BestAvailableRule</td><td style="text-align:center">最低并发策略</td><td style="text-align:center">逐个考察 Server，如果 Server 的断路器被打开，则忽略，在不被忽略的 Server 中选择并发连接最低的 Server</td></tr><tr><td style="text-align:center">AvailabilityFilteringRule</td><td style="text-align:center">可用过滤测试</td><td style="text-align:center">过滤掉一直连接失败，并被标记未 circuit tripped（即不可用） 的 Server，过滤掉高并发的 Server</td></tr><tr><td style="text-align:center">ResponseTimeWeightedRule</td><td style="text-align:center">响应时间加权策略</td><td style="text-align:center">根据 Server 的响应时间分配权重，响应时间越长，权重越低，被选择到的几率就越低</td></tr><tr><td style="text-align:center">ZoneAvoidanceRule</td><td style="text-align:center">区域权衡策略</td><td style="text-align:center">综合判断 Server 所在区域的性能和 Server 的可用性轮询选择 Server，并判定一个 AWS Zone 的运行性能是否可用，剔除不可用的 Zone 中的所有 Server</td></tr></tbody></table><p>Ribbon 默认的负载均衡策略是 <code>轮询策略</code>。</p><h2 id="设置负载均衡策略"><a href="#设置负载均衡策略" class="headerlink" title="设置负载均衡策略"></a>设置负载均衡策略</h2><h3 id="设置全局负载均衡"><a href="#设置全局负载均衡" class="headerlink" title="设置全局负载均衡"></a>设置全局负载均衡</h3><p>创建一个声明式配置，即可实现全局负载均衡配置：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RibbonConfig</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 全局负载均衡配置：随机策略</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IRule <span class="title">ribbonRule</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RandomRule();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>重启 Consumer，访问测试</p><h2 id="基于注解的配置"><a href="#基于注解的配置" class="headerlink" title="基于注解的配置"></a>基于注解的配置</h2><h3 id="空注解"><a href="#空注解" class="headerlink" title="空注解"></a>空注解</h3><p>声明一个空注解，用于使用注解配置 Ribbon 负载均衡</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RibbonAnnotation &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="负载均衡配置类"><a href="#负载均衡配置类" class="headerlink" title="负载均衡配置类"></a>负载均衡配置类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@RibbonAnnotation</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RibbonAnnoConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> IClientConfig clientConfig;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span>(required = <span class="keyword">false</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">RibbonAnnoConfig</span><span class="params">(IClientConfig clientConfig)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.clientConfig = clientConfig;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> IRule <span class="title">ribbonRule</span><span class="params">(IClientConfig clientConfig)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RandomRule();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="启动类"><a href="#启动类" class="headerlink" title="启动类"></a>启动类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@RibbonClient</span>(name = <span class="string">"spring-cloud-ribbon-provider"</span>, configuration = RibbonAnnoConfig.class)</span><br><span class="line"><span class="meta">@ComponentScan</span>(excludeFilters = &#123;<span class="meta">@ComponentScan</span>.Filter(type = FilterType.ANNOTATION, value = RibbonAnnotation.class)&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpringCloudRibbonConsumerApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(SpringCloudRibbonConsumerApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestTemplate <span class="title">restTemplate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> RestTemplate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><code>@RibbonClient</code>：针对 <code>spring-cloud-ribbon-provider</code> 服务，使用负载均衡，配置类是 <code>configuration</code> 标注的类。<br><code>@ComponentScan</code>：让 Spring 不去扫描被 <code>@RibbonAnnotation</code> 类标记的配置类，因为我们的配置对单个服务生效，不能应用于全局，如果不排除，启动就会报错</p><p>如果需要对多个服务进行配置，可以使用 <code>@RibbonClients</code> 注解<br></p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RibbonClients</span>(value = &#123;</span><br><span class="line">        <span class="meta">@RibbonClient</span>(name = <span class="string">"spring-cloud-ribbon-provider"</span>, configuration = RibbonAnnoConfig.class)        </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure><p></p><p>重启 Consumer，验证基于注解的负载均衡是否成功</p><h2 id="基于配置文件的负载均衡策略"><a href="#基于配置文件的负载均衡策略" class="headerlink" title="基于配置文件的负载均衡策略"></a>基于配置文件的负载均衡策略</h2><p>语法：<br></p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#123;instance-id&#125;:</span> <span class="comment"># instance-id 即被调用服务名称</span></span><br><span class="line"><span class="attr">    ribbon:</span></span><br><span class="line"><span class="attr">        NFLoadBalancerRuleClassName:</span> <span class="string">com.netflix.loadbalancer.RandomRule</span></span><br></pre></td></tr></table></figure><p></p><hr><h1 id="Ribbon-配置"><a href="#Ribbon-配置" class="headerlink" title="Ribbon 配置"></a>Ribbon 配置</h1><p><strong><em>源码：<a href="https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-config" target="_blank" rel="noopener">https://gitee.com/laiyy0728/spring-cloud/tree/master/spring-cloud-ribbon/spring-cloud-ribbon-config</a></em></strong></p><h2 id="超时与重试"><a href="#超时与重试" class="headerlink" title="超时与重试"></a>超时与重试</h2><p>HTTP 请求难免会出现请求超时，此时对调用进行时限的控制以及在时限之后的重试尤为重要。对于超时重试的配置如下：<br></p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#123;instance-id&#125;:</span> <span class="comment"># instance-id 指的是被调用者的服务名称</span></span><br><span class="line"><span class="attr">  ribbon:</span></span><br><span class="line"><span class="attr">    ConnectTimeout:</span> <span class="number">30000</span> <span class="comment"># 链接超时时间</span></span><br><span class="line"><span class="attr">    ReadTimeout:</span> <span class="number">30000</span> <span class="comment"># 读超时时间</span></span><br><span class="line"><span class="attr">    MaxAutoRetries:</span> <span class="number">1</span> <span class="comment"># 对第一次请求的服务的重试次数</span></span><br><span class="line"><span class="attr">    MaxAutoRetriesNextServer:</span> <span class="number">1</span> <span class="comment"># 要重试的下一个服务的最大数量（不包括第一个服务）</span></span><br><span class="line"><span class="attr">    OkToRetryOnAllOperations:</span> <span class="literal">true</span> <span class="comment"># 是否对 连接超时、读超时、写超时 都进行重试</span></span><br></pre></td></tr></table></figure><p></p><h2 id="Ribbon-饥饿加载"><a href="#Ribbon-饥饿加载" class="headerlink" title="Ribbon 饥饿加载"></a>Ribbon 饥饿加载</h2><p>Ribbon 在进行负载均衡时，并不是启动时就加载上线文，而是在实际的请求发送时，才去请求上下文信息，获取被调用者的 ip、端口，这种方式在网络环境较差时，往往会使得第一次引起超时，导致调用失败。此时需要指定 Ribbon 客户端，进行<code>饥饿加载</code>，即：在启动时就加载好上下文。</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line"><span class="attr">  eager-load:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    clients:</span> <span class="string">spring-cloid-ribbon-provider</span></span><br></pre></td></tr></table></figure><p>此时启动 consumer，会看到控制打印信息如下：<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Client: spring-cloid-ribbon-provider instantiated a LoadBalancer: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=spring-cloid-ribbon-provider,current list of Servers=[],Load balancer stats=Zone stats: &#123;&#125;,Server stats: []&#125;ServerList:null</span><br><span class="line">Using serverListUpdater PollingServerListUpdater</span><br><span class="line">DynamicServerListLoadBalancer for client spring-cloid-ribbon-provider initialized: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=spring-cloid-ribbon-provider,current list of Servers=[],Load balancer stats=Zone stats: &#123;&#125;,Server stats: []&#125;ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@79e7188e</span><br></pre></td></tr></table></figure><p></p><p>可以看到启动时就加载了 <code>spring-cloid-ribbon-provider</code>，并绑定了<code>LoadBalancer</code></p><h2 id="Ribbon-常用配置"><a href="#Ribbon-常用配置" class="headerlink" title="Ribbon 常用配置"></a>Ribbon 常用配置</h2><table><thead><tr><th style="text-align:center">配置项</th><th style="text-align:center">说明</th></tr></thead><tbody><tr><td style="text-align:center">{instance-id}:ribbon.NFLoadBalancerClassName</td><td style="text-align:center">指负载均衡器类路径</td></tr><tr><td style="text-align:center">{instance-id}:ribbon:NFLoadBalancerRuleClassName</td><td style="text-align:center">指定负载均衡算法类路径</td></tr><tr><td style="text-align:center">{instance-id}:ribbom:NFLoadBalancerPingClassName</td><td style="text-align:center">指定检测服务存活的类路径</td></tr><tr><td style="text-align:center">{instance-id}:ribbon:NIWSServerListClassName</td><td style="text-align:center">指定获取服务列表的实现类路径</td></tr><tr><td style="text-align:center">{instance-id}:ribbon:NIWSServerListFilterClassName</td><td style="text-align:center">指定服务的 Filter 实现类路径</td></tr></tbody></table><h2 id="Ribbon-脱离-Eureka"><a href="#Ribbon-脱离-Eureka" class="headerlink" title="Ribbon 脱离 Eureka"></a>Ribbon 脱离 Eureka</h2><p>默认情况下，Ribbon 客户端会从 Eureka Server 读取服务注册信息列表，达到动态负载均衡的功能。如果 Eureka 是一个提供多人使用的公共注册中心(如 SpringCloud 中文社区公益 Eureka：<a href="http://eureka.springcloud.cn)，此时极易产生服务侵入问题，此时就不能从" target="_blank" rel="noopener">http://eureka.springcloud.cn)，此时极易产生服务侵入问题，此时就不能从</a> Eureka 中读取服务列表，而应该在 Ribbon 客户端自行制定源服务地址</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">ribbon:</span></span><br><span class="line"><span class="attr">  eureka:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">false</span> <span class="comment"># Ribbon 脱离 Eureka 使用</span></span><br><span class="line"></span><br><span class="line"><span class="string">&#123;instance-id&#125;:</span></span><br><span class="line"><span class="attr">  ribbon:</span></span><br><span class="line"><span class="attr">    listOfServers:</span> <span class="attr">http://localhost:8888</span> <span class="comment"># 制定源服务地址</span></span><br></pre></td></tr></table></figure></div><div><div><div style="text-align:center;color:#bbb;font-size:15px"><br>-------------本文结束<i class="fa fa-paw"></i> 感谢您的阅读-------------</div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Laiyy</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://www.laiyy.top/spring-cloud/spring-cloud-11.html" title="Spring Cloud 微服务（11） --- Ribbon(一) <BR> 负载均衡与 Ribbon">https://www.laiyy.top/spring-cloud/spring-cloud-11.html</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/SpringCloud/" rel="tag"><i class="fa fa-tag"></i> SpringCloud</a><a href="/tags/Ribbon/" rel="tag"><i class="fa fa-tag"></i> Ribbon</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/spring-cloud/spring-cloud-10.html" rel="next" title="Spring Cloud 微服务 （10） --- Feign(四)  <BR> 文件上传、首次调用失败问题"><i class="fa fa-chevron-left"></i> Spring Cloud 微服务 （10） --- Feign(四)<br> 文件上传、首次调用失败问题</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/spring-cloud/spring-cloud-12.html" rel="prev" title="Spring Cloud 微服务（12） --- Ribbon(二) <BR> 工作原理">Spring Cloud 微服务（12） --- Ribbon(二)<br> 工作原理<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"><div class="addthis_inline_share_toolbox"><script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c42b60d6ef7b089" async="async"></script></div></div></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/icon.jpg" alt="Laiyy"><p class="site-author-name" itemprop="name">Laiyy</p><p class="site-description motion-element" itemprop="description">简介</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">55</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">8</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">19</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/laiyy0728" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:laiyy0728@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="https://www.jianshu.com/u/8fa6bf5f8bd9" target="_blank" title="简  书"><i class="fa fa-fw fa-book"></i> 简 书</a></span></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡与-Ribbon"><span class="nav-number">1.</span> <span class="nav-text">负载均衡与 Ribbon</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#示例"><span class="nav-number">2.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Consumer"><span class="nav-number">2.1.</span> <span class="nav-text">Consumer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#provider"><span class="nav-number">2.2.</span> <span class="nav-text">provider</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#验证"><span class="nav-number">2.3.</span> <span class="nav-text">验证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡策略"><span class="nav-number">3.</span> <span class="nav-text">负载均衡策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设置负载均衡策略"><span class="nav-number">3.1.</span> <span class="nav-text">设置负载均衡策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设置全局负载均衡"><span class="nav-number">3.1.1.</span> <span class="nav-text">设置全局负载均衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于注解的配置"><span class="nav-number">3.2.</span> <span class="nav-text">基于注解的配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#空注解"><span class="nav-number">3.2.1.</span> <span class="nav-text">空注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负载均衡配置类"><span class="nav-number">3.2.2.</span> <span class="nav-text">负载均衡配置类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动类"><span class="nav-number">3.2.3.</span> <span class="nav-text">启动类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于配置文件的负载均衡策略"><span class="nav-number">3.3.</span> <span class="nav-text">基于配置文件的负载均衡策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ribbon-配置"><span class="nav-number">4.</span> <span class="nav-text">Ribbon 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#超时与重试"><span class="nav-number">4.1.</span> <span class="nav-text">超时与重试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon-饥饿加载"><span class="nav-number">4.2.</span> <span class="nav-text">Ribbon 饥饿加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon-常用配置"><span class="nav-number">4.3.</span> <span class="nav-text">Ribbon 常用配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Ribbon-脱离-Eureka"><span class="nav-number">4.4.</span> <span class="nav-text">Ribbon 脱离 Eureka</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_uv">UV:<span id="busuanzi_value_site_uv"></span></span></div> <span class="post-meta-divider">|</span><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_pv">PV:<span id="busuanzi_value_site_pv"></span></span></div><div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2019</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">laiyy</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span class="post-meta-item-text">网站总字数&#58;</span> <span title="网站总字数">91.8k 字</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/lib/three/three.min.js"></script><script type="text/javascript" src="/lib/three/three-waves.min.js"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script></body></html><script type="text/javascript" src="/js/src/clipboard.min.js"></script><script type="text/javascript" src="/js/src/clipboard-use.js"></script>
