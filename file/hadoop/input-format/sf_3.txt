@@ -1,0 +1,3 @@
+agular text study
+node hadoop 
+python go
