@@ -1,0 +1,316 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet"><style>.pace .pace-progress{background:#1e92fb;height:3px}.pace .pace-progress-inner{box-shadow:0 0 10px #1e92fb,0 0 5px #1e92fb}.pace .pace-activity{border-top-color:#1e92fb;border-left-color:#1e92fb}</style><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4"><link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222"><link rel="manifest" href="/images/manifest.json"><meta name="keywords" content="hive,"><link rel="alternate" href="/atom.xml" title="Laiyy 的个人小站" type="application/atom+xml"><meta name="description" content="Hive 的查询与 sql 基本一致，都有基本查询、别名、limit、like、分组、join 等语法。 查询语句语法：https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select"><meta name="keywords" content="hive"><meta property="og:type" content="article"><meta property="og:title" content="Hive(九) &lt;BR&#x2F;&gt; 数据查询（1）"><meta property="og:url" content="https://www.laiyy.top/hive/hive-9.html"><meta property="og:site_name" content="Laiyy 的个人小站"><meta property="og:description" content="Hive 的查询与 sql 基本一致，都有基本查询、别名、limit、like、分组、join 等语法。 查询语句语法：https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select"><meta property="og:locale" content="zh-Hans"><meta property="og:updated_time" content="2019-12-31T07:30:55.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Hive(九) &lt;BR&#x2F;&gt; 数据查询（1）"><meta name="twitter:description" content="Hive 的查询与 sql 基本一致，都有基本查询、别名、limit、like、分组、join 等语法。 查询语句语法：https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.4",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://www.laiyy.top/hive/hive-9.html"><title>Hive(九)<br> 数据查询（1） | Laiyy 的个人小站</title><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></head><body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div> <a href="https://github.com/laiyy0728" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513;color:#fff;position:absolute;top:0;border:0;right:0" aria-hidden="true"><path d="M0 0 115 115 130 115 142 142 250 250 250 0Z"/><path d="M128.3 109C113.8 99.7 119 89.6 119 89.6 122 82.7 120.5 78.6 120.5 78.6 119.2 72 123.4 76.3 123.4 76.3 127.3 80.9 125.5 87.3 125.5 87.3 122.9 97.6 130.6 101.9 134.4 103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"/><path d="M115 115C114.9 115.1 118.7 116.5 119.8 115.4L133.7 101.6C136.9 99.2 139.9 98.4 142.2 98.6 133.8 88 127.5 74.4 143.8 58 148.5 53.4 154 51.2 159.7 51 160.3 49.4 163.2 43.6 171.4 40.1 171.4 40.1 176.1 42.5 178.8 56.2 183.1 58.6 187.2 61.8 190.9 65.4 194.5 69 197.7 73.2 200.1 77.6 213.8 80.2 216.3 84.9 216.3 84.9 212.7 93.1 206.9 96 205.4 96.6 205.1 102.4 203 107.8 198.3 112.5 181.9 128.9 168.3 122.5 157.7 114.1 157.9 116.9 156.7 120.9 152.7 124.9L141 136.5C139.8 137.7 141.6 141.9 141.8 141.8Z" fill="currentColor" class="octo-body"/></svg></a><header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Laiyy 的个人小站</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-关于我"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于我</a></li><li class="menu-item menu-item-标签"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-分类"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-归档"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://www.laiyy.top/hive/hive-9.html"><span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person"><meta itemprop="name" content="Laiyy"><meta itemprop="description" content=""><meta itemprop="image" content="/images/icon.jpg"></span><span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization"><meta itemprop="name" content="Laiyy 的个人小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Hive(九)<br> 数据查询（1）</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-31T15:30:55+08:00">2019-12-31</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/hive/" itemprop="url" rel="index"><span itemprop="name">hive</span></a></span></span><div class="post-wordcount"> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">2.3k 字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">10 分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>Hive 的查询与 sql 基本一致，都有基本查询、别名、limit、like、分组、join 等语法。</p><p>查询语句语法：<a href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select" target="_blank" rel="noopener">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+Select</a></p><a id="more"></a><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> [ALL | <span class="keyword">DISTINCT</span>] select_expr, select_expr, ...</span><br><span class="line">  <span class="keyword">FROM</span> table_reference</span><br><span class="line">  [<span class="keyword">WHERE</span> where_condition]</span><br><span class="line">  [<span class="keyword">GROUP</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [<span class="keyword">ORDER</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  [CLUSTER <span class="keyword">BY</span> col_list</span><br><span class="line">    | [<span class="keyword">DISTRIBUTE</span> <span class="keyword">BY</span> col_list] [<span class="keyword">SORT</span> <span class="keyword">BY</span> col_list]</span><br><span class="line">  ]</span><br><span class="line"> [<span class="keyword">LIMIT</span> [<span class="keyword">offset</span>,] <span class="keyword">rows</span>]</span><br></pre></td></tr></table></figure><h1 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h1><h2 id="全表和特定列查询"><a href="#全表和特定列查询" class="headerlink" title="全表和特定列查询"></a>全表和特定列查询</h2><blockquote><p>全表查询</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><blockquote><p>特定列查询</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> col_name <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><blockquote><p>注意</p></blockquote><ol><li>HQL 语句大小写不敏感</li><li>HQL 可以写在一行或多行</li><li>关键字不能被缩写，也不能分行</li><li>各子句一般要分行写</li><li>使用缩进提高语句的可读性</li></ol><h2 id="列别名查询"><a href="#列别名查询" class="headerlink" title="列别名查询"></a>列别名查询</h2><blockquote><p>重命名一个列、便于计算<br>紧跟列名，也可以在列名与别名之间加 <code>AS</code></p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> col_name new_name <span class="keyword">from</span> table_name;</span><br><span class="line"><span class="keyword">select</span> col_name <span class="keyword">AS</span> new_name <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><h2 id="算数运算符"><a href="#算数运算符" class="headerlink" title="算数运算符"></a>算数运算符</h2><table><thead><tr><th style="text-align:center">运算符</th><th style="text-align:center">描述</th></tr></thead><tbody><tr><td style="text-align:center">A + B</td><td style="text-align:center">A 和 B 相加</td></tr><tr><td style="text-align:center">A - B</td><td style="text-align:center">A 和 B 相减</td></tr><tr><td style="text-align:center">A * B</td><td style="text-align:center">A 和 B 相乘</td></tr><tr><td style="text-align:center">A / B</td><td style="text-align:center">A 除以 B</td></tr><tr><td style="text-align:center">A % B</td><td style="text-align:center">A 对 B 取余</td></tr><tr><td style="text-align:center">A &amp; B</td><td style="text-align:center">A 和 B 按位取 与</td></tr><tr><td style="text-align:center">A</td><td style="text-align:center">B</td><td>A 和 B 按位取 或</td></tr><tr><td style="text-align:center">A ^ b</td><td style="text-align:center">A 和 B 按位取 异或</td></tr><tr><td style="text-align:center">~A</td><td style="text-align:center">A 按位取反</td></tr></tbody></table><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> col_name + <span class="number">1</span> <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><h2 id="常用内置函数"><a href="#常用内置函数" class="headerlink" title="常用内置函数"></a>常用内置函数</h2><blockquote><p>求总行数</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><blockquote><p>求最大、最小值</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">max</span>(col_name) <span class="keyword">from</span> table_name;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">min</span>(col_name) <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><blockquote><p>求总和、平均值</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">sum</span>(col_name) <span class="keyword">from</span> table_name;</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">avg</span>(col_name) <span class="keyword">from</span> table_name;</span><br></pre></td></tr></table></figure><h2 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">limit</span> <span class="keyword">num</span>;</span><br></pre></td></tr></table></figure><hr><h1 id="Where-子句"><a href="#Where-子句" class="headerlink" title="Where 子句"></a>Where 子句</h1><blockquote><p>使用 where 子句，将不满足条件的行过滤掉<br>where 子句紧随 from 子句</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name <span class="keyword">where</span> condition;</span><br></pre></td></tr></table></figure><h2 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h2><blockquote><p>谓词操作符，可以用于 where、join…on、having 子句中</p></blockquote><table><thead><tr><th style="text-align:center">操作符</th><th style="text-align:center">支持的数据类型</th><th style="text-align:center">描述</th></tr></thead><tbody><tr><td style="text-align:center">A = B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">如果 A 等于 B，返回 TRUE，否则返回 FALSE</td></tr><tr><td style="text-align:center">A &lt;=&gt; B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">如果 A 和 B 都为 NULL，则返回 TRUE，其他的和（=）操作符一致；如果任意一项为 NULL，则结果为 NULL</td></tr><tr><td style="text-align:center">A &lt;&gt; B，A != B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">如果 A 或 B 为 NULL，则返回 NULL；如果 A 不等于 B，返回 TRUE，否则返回 FALSE</td></tr><tr><td style="text-align:center">A &lt; B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">A 或者 B 为 NULL，则返回 NULL；如果 A 小于 B，则返回 TRUE，反之返回 FALSE</td></tr><tr><td style="text-align:center">A &lt;= B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">A 或者 B 为 NULL，则返回 NULL；如果 A 小于等于 B，则返回 TRUE，否则返回 FALSE</td></tr><tr><td style="text-align:center">A &gt; B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">A 或者 B 为 NULL，则返回 NULL；如果 A 大于 B，则返回 TRUE，反之返回 FALSE</td></tr><tr><td style="text-align:center">A &gt;= B</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">A 或者 B 为 NULL，则返回 NULL；如果 A 大于等于 B，则返回 TRUE，否则返回 FALSE</td></tr><tr><td style="text-align:center">A [NOT] BETWEEN B AND C</td><td style="text-align:center">基本数据类型</td><td style="text-align:center">如果 A， B 或者 C 任一为 NULL，则结果为 NULL。如果 A 的值大于等于 B 而且小于或等于 C，则结果为 TRUE，反之为 FALSE。如果使用 NOT 关键字则可达到相反的效果。</td></tr><tr><td style="text-align:center">A IS NULL</td><td style="text-align:center">所有数据类型</td><td style="text-align:center">如果 A 等于 NULL，则返回 TRUE，反之返回 FALSE</td></tr><tr><td style="text-align:center">A IS NOT NULL</td><td style="text-align:center">所有数据类型</td><td style="text-align:center">如果 A 等于 NULL，则返回 TRUE，反之返回 FALSE</td></tr><tr><td style="text-align:center">IN(数值 1, 数值 2)</td><td style="text-align:center">所有数据类型</td><td style="text-align:center">使用 IN 运算显示列表中的值</td></tr><tr><td style="text-align:center">A [NOT] LIKE B</td><td style="text-align:center">STRING 类型</td><td style="text-align:center">B 是一个 SQL 下的简单正则表达式，如果 A 与其匹配的话，则返回 TRUE；反之返回 FALSE。 B 的表达式说明如下：‘x%’表示 A必须以字母‘x’开头，‘%x’表示 A 必须以字母’ x’结尾，而‘%x%’表示 A 包含有字母’ x’ ,可以位于开头，结尾或者字符串中间。如果使用 NOT 关键字则可达到相反的效果。</td></tr><tr><td style="text-align:center">A RLIKE B, A REGEXP B</td><td style="text-align:center">STRING 类型</td><td style="text-align:center">B 是一个正则表达式，如果 A 与其匹配，则返回 TRUE；反之返回FALSE。匹配使用的是 JDK 中的正则表达式接口实现的，因为正则也依据其中的规则。例如，正则表达式必须和整个字符串 A 相匹配，而不是只需与其字符串匹配。</td></tr></tbody></table><h2 id="Like、RLike"><a href="#Like、RLike" class="headerlink" title="Like、RLike"></a>Like、RLike</h2><blockquote><p>使用 LIKE 运算选择类似的值<br>选择条件可以包含字符、数字。（<code>%</code> 代表 0 个或多个字符；<code>_</code> 代表一个字符）<br>RLIKE 子句是 Hive 中的功能扩展，可以通过 Java 正则表达式来指定匹配条件</p></blockquote><h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><table><thead><tr><th style="text-align:center">操作符</th><th style="text-align:center">含义</th></tr></thead><tbody><tr><td style="text-align:center">AND</td><td style="text-align:center">逻辑与</td></tr><tr><td style="text-align:center">OR</td><td style="text-align:center">逻辑或</td></tr><tr><td style="text-align:center">NOT</td><td style="text-align:center">逻辑或</td></tr></tbody></table><hr><h1 id="分组函数"><a href="#分组函数" class="headerlink" title="分组函数"></a>分组函数</h1><h2 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h2><p>GROUP BY 语句通常会和聚合函数一起使用，按照一个或多个队列结果进行分组展示，然后对每个组执行聚合操作。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select deptno, avg(sal) avg_sal from emp group by deptno;</span><br><span class="line">Query ID = root_20200106101803_35d15cb7-040e-42ea-8345-0ea0975951f8</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Total MapReduce CPU Time Spent: 4 seconds 310 msec</span><br><span class="line">OK</span><br><span class="line">deptno	avg_sal</span><br><span class="line">10	2916.6666666666665</span><br><span class="line">20	2175.0</span><br><span class="line">30	1566.6666666666667</span><br><span class="line">Time taken: 25.732 seconds, Fetched: 3 row(s)</span><br></pre></td></tr></table></figure><h2 id="Having-子句"><a href="#Having-子句" class="headerlink" title="Having 子句"></a>Having 子句</h2><h3 id="Having-与-where-不同点"><a href="#Having-与-where-不同点" class="headerlink" title="Having 与 where 不同点"></a>Having 与 where 不同点</h3><blockquote><p>where 针对表中的列发挥作用；having 针对查询结果中的列发生作用，筛选数据<br>where 后面不能写分组函数；having 后面可以使用分组函数<br>having 只用于 group by 分组统计语句</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select deptno, avg(sal) avg_sal from emp group by deptno having avg_sal &gt; 2000;</span><br><span class="line">Query ID = root_20200106102306_7985f86c-fa99-4348-9daf-cac6bdd2ced8</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Total MapReduce CPU Time Spent: 4 seconds 180 msec</span><br><span class="line">OK</span><br><span class="line">deptno	avg_sal</span><br><span class="line">10	2916.6666666666665</span><br><span class="line">20	2175.0</span><br><span class="line">Time taken: 25.657 seconds, Fetched: 2 row(s)</span><br></pre></td></tr></table></figure><hr><h1 id="Join"><a href="#Join" class="headerlink" title="Join"></a>Join</h1><h2 id="等值-join"><a href="#等值-join" class="headerlink" title="等值 join"></a>等值 join</h2><p>Hive 直冲通常的 SQL JOIN，但是只支持等值连接，不支持非等值连接。<br><strong><em>Hive 只支持 on A=B；不支持 on A!=B</em></strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.deptno, e.ename from emp e join dept d on e.deptno = d.deptno;</span><br><span class="line">Query ID = root_20200106102604_eaba33e7-9e47-4a91-b8db-401f0e258c4b</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Total MapReduce CPU Time Spent: 2 seconds 50 msec</span><br><span class="line">OK</span><br><span class="line">e.deptno	e.ename</span><br><span class="line">20	SMITH</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">10	MILLER</span><br><span class="line">Time taken: 18.614 seconds, Fetched: 14 row(s)</span><br></pre></td></tr></table></figure><h2 id="表的别名"><a href="#表的别名" class="headerlink" title="表的别名"></a>表的别名</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> table_name table_alias_name;</span><br></pre></td></tr></table></figure><blockquote><p>好处</p></blockquote><ol><li>使用别名可以优化查询</li><li>使用表名前缀可以提高执行效率</li></ol><h2 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h2><p>只有进行连接的两个表都存在连接条件相匹配的数据才会被保留下来。</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.empno, e.ename, d.deptno from emp e join dept d on e.deptno = d.deptno;</span><br></pre></td></tr></table></figure><h2 id="左外、右外、满外连接"><a href="#左外、右外、满外连接" class="headerlink" title="左外、右外、满外连接"></a>左外、右外、满外连接</h2><blockquote><p>左外连接</p></blockquote><p>JOIN 操作符左边表中符合 WHERE 子句的记录会被记录下来。</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.empno, e.ename, d.deptno from emp e left join dept d on e.deptno = d.deptno;</span><br></pre></td></tr></table></figure><blockquote><p>右外连接</p></blockquote><p>JOIN 操作符右边表符合 WHERE 子句的记录会被记录下来。</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.empno, e.ename, d.deptno from emp e right dept d on e.deptno = d.deptno;</span><br></pre></td></tr></table></figure><blockquote><p>满外链接</p></blockquote><p>会返回所有表中符合 WHERE 语句条件的所有记录。如果任意表的指定字段没有符合条件的值，则会用 NULL 替代。</p><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.empno, e.ename, d.deptno from emp e full dept d on e.deptno = d.deptno;</span><br></pre></td></tr></table></figure><h2 id="多表-join"><a href="#多表-join" class="headerlink" title="多表 join"></a>多表 join</h2><p><strong><em>注意：连接 N 个表，至少需要 N-1 个连接条件</em></strong></p><p>大多数情况下，Hive 会对每对 JOIN 对象启动一个 MapReduce 任务</p><h2 id="笛卡尔集"><a href="#笛卡尔集" class="headerlink" title="笛卡尔集"></a>笛卡尔集</h2><blockquote><p>产生条件</p></blockquote><ol><li>省略连接条件</li><li>连接条件无效</li><li>所有表中的所有行互相连接</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select empno,dname from emp,dept;</span><br><span class="line">Warning: Map Join MAPJOIN[7][bigTable=emp] in task &apos;Stage-3:MAPRED&apos; is a cross product</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Total MapReduce CPU Time Spent: 1 seconds 210 msec</span><br><span class="line">OK</span><br><span class="line">empno	dname</span><br><span class="line">7369	ACCOUNTING</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">7934	OPERATIONS</span><br><span class="line">Time taken: 14.668 seconds, Fetched: 56 row(s)</span><br></pre></td></tr></table></figure><h2 id="连接谓词不支持-OR"><a href="#连接谓词不支持-OR" class="headerlink" title="连接谓词不支持 OR"></a>连接谓词不支持 OR</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select e.empno, e.ename, d.deptno from emp e join dept d on e.deptno = d.deptno or e.ename = d.ename;</span><br><span class="line">FAILED: SemanticException [Error 10019]: Line 1:60 OR not supported in JOIN currently &apos;ename&apos;</span><br></pre></td></tr></table></figure><hr><h1 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h1><h2 id="全局排序"><a href="#全局排序" class="headerlink" title="全局排序"></a>全局排序</h2><p>Order By：全局排序，一个 Reducer</p><blockquote><p>使用 Order by 子句排序（ASC：升序，默认；DESC：降序<br>Order by 子句在 SELECT 语句的末尾<br>具体操作与 SQL 类型</p></blockquote><h2 id="内部排序"><a href="#内部排序" class="headerlink" title="内部排序"></a>内部排序</h2><p>Sort by：对每个 Reducer 内部有进行排序，对全局结果集来说不是排序。</p><ol><li>设置 Reducer 数量 <code>set mapreduce.job.reduces=3</code></li><li>查询数据 <code>hive (default)&gt; select * from emp sort by empno desc;</code></li><li>将查询结果导入到文件中（按照部门编号降序）<code>hive (default)&gt; insert overwrite local directory &#39;/opt/module/datas/hive/sortby-result&#39; select * from emp sort by deptno desc;</code></li><li>查看导出的结果</li></ol><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop02 ~]# ll /opt/module/datas/hive/sortby-result</span><br><span class="line">总用量 12</span><br><span class="line">-rw-r--r-- 1 root root 288 1月   6 10:56 000000_0</span><br><span class="line">-rw-r--r-- 1 root root 282 1月   6 10:56 000001_0</span><br><span class="line">-rw-r--r-- 1 root root  91 1月   6 10:56 000002_0</span><br><span class="line">[root@hadoop02 ~]#</span><br></pre></td></tr></table></figure><h2 id="分区排序"><a href="#分区排序" class="headerlink" title="分区排序"></a>分区排序</h2><p>Distribute by：类似 MR 中的 partition 进行分区，需要结合 sort by 使用。</p><p><strong><em>注意：Hive 要求 Distribute by 语句要写在 sort by 语句之前</em></strong></p><p>对于 Distribute by 进行测试，一定要分配多个 reduce 进行处理，否则无法看到 Distribute by 的效果。</p><blockquote><p>测试：先按照部门编号分区，再按照员工编号降序排序</p></blockquote><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert overwrite local directory '/opt/module/datas/hive/distributeby-result' select * from emp distribute by deptno sort by empno desc;</span><br></pre></td></tr></table></figure><blockquote><p>执行结果</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop02 ~]# ll /opt/module/datas/hive/distributeby-result</span><br><span class="line">总用量 12</span><br><span class="line">-rw-r--r-- 1 root root 293 1月   6 11:03 000000_0</span><br><span class="line">-rw-r--r-- 1 root root 139 1月   6 11:03 000001_0</span><br><span class="line">-rw-r--r-- 1 root root 229 1月   6 11:03 000002_0</span><br></pre></td></tr></table></figure><blockquote><p>可以看到在 000000_0 中，都是部门 id 为 30 的。</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop02 ~]# cat /opt/module/datas/hive/distributeby-result/000000_0 </span><br><span class="line">7900JAMESCLERK76981981-12-3950.0\N30</span><br><span class="line">7844TURNERSALESMAN76981981-9-81500.00.030</span><br><span class="line">7698BLAKEMANAGER78391981-5-12850.0\N30</span><br><span class="line">7654MARTINSALESMAN76981981-9-281250.01400.030</span><br><span class="line">7521WARDSALESMAN76981981-2-221250.0500.030</span><br><span class="line">7499ALLENSALESMAN76981981-2-201600.0300.030</span><br></pre></td></tr></table></figure><h2 id="Cluster-by"><a href="#Cluster-by" class="headerlink" title="Cluster by"></a>Cluster by</h2><p>当 distribute by 和 sort by 字段相同时，可以使用 cluster by 方式。</p><p>cluster by 兼具 distribute by 和 sort by 的功能。</p><p>只能升序；不能指定排序规则为 ASC、DESC。</p><blockquote><p>下面两种写法等价</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> emp cluster <span class="keyword">by</span> deptno;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> emp <span class="keyword">distribute</span> <span class="keyword">by</span> deptno <span class="keyword">sort</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure></div><div><div><div style="text-align:center;color:#bbb;font-size:15px"><br>-------------本文结束<i class="fa fa-paw"></i> 感谢您的阅读-------------</div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Laiyy</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://www.laiyy.top/hive/hive-9.html" title="Hive(九) <BR/> 数据查询（1）">https://www.laiyy.top/hive/hive-9.html</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/hive/" rel="tag"><i class="fa fa-tag"></i> hive</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/hive/dml/hive-8.html" rel="next" title="Hive(八) <BR/> DML"><i class="fa fa-chevron-left"></i> Hive(八)<br> DML</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/hive/hive-10.html" rel="prev" title="Hive(十) <BR/> 数据查询（2）">Hive(十)<br> 数据查询（2）<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"><div class="addthis_inline_share_toolbox"><script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c42b60d6ef7b089" async="async"></script></div></div></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/icon.jpg" alt="Laiyy"><p class="site-author-name" itemprop="name">Laiyy</p><p class="site-description motion-element" itemprop="description">简介</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">88</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">19</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">35</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/laiyy0728" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:laiyy0728@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="https://www.jianshu.com/u/8fa6bf5f8bd9" target="_blank" title="简  书"><i class="fa fa-fw fa-book"></i> 简 书</a></span></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本查询"><span class="nav-number">1.</span> <span class="nav-text">基本查询</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全表和特定列查询"><span class="nav-number">1.1.</span> <span class="nav-text">全表和特定列查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列别名查询"><span class="nav-number">1.2.</span> <span class="nav-text">列别名查询</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算数运算符"><span class="nav-number">1.3.</span> <span class="nav-text">算数运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用内置函数"><span class="nav-number">1.4.</span> <span class="nav-text">常用内置函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#limit"><span class="nav-number">1.5.</span> <span class="nav-text">limit</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Where-子句"><span class="nav-number">2.</span> <span class="nav-text">Where 子句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#比较运算符"><span class="nav-number">2.1.</span> <span class="nav-text">比较运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Like、RLike"><span class="nav-number">2.2.</span> <span class="nav-text">Like、RLike</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑运算符"><span class="nav-number">2.3.</span> <span class="nav-text">逻辑运算符</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分组函数"><span class="nav-number">3.</span> <span class="nav-text">分组函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GROUP-BY"><span class="nav-number">3.1.</span> <span class="nav-text">GROUP BY</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Having-子句"><span class="nav-number">3.2.</span> <span class="nav-text">Having 子句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Having-与-where-不同点"><span class="nav-number">3.2.1.</span> <span class="nav-text">Having 与 where 不同点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Join"><span class="nav-number">4.</span> <span class="nav-text">Join</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#等值-join"><span class="nav-number">4.1.</span> <span class="nav-text">等值 join</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表的别名"><span class="nav-number">4.2.</span> <span class="nav-text">表的别名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内连接"><span class="nav-number">4.3.</span> <span class="nav-text">内连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#左外、右外、满外连接"><span class="nav-number">4.4.</span> <span class="nav-text">左外、右外、满外连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多表-join"><span class="nav-number">4.5.</span> <span class="nav-text">多表 join</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#笛卡尔集"><span class="nav-number">4.6.</span> <span class="nav-text">笛卡尔集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#连接谓词不支持-OR"><span class="nav-number">4.7.</span> <span class="nav-text">连接谓词不支持 OR</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#排序"><span class="nav-number">5.</span> <span class="nav-text">排序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局排序"><span class="nav-number">5.1.</span> <span class="nav-text">全局排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内部排序"><span class="nav-number">5.2.</span> <span class="nav-text">内部排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分区排序"><span class="nav-number">5.3.</span> <span class="nav-text">分区排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster-by"><span class="nav-number">5.4.</span> <span class="nav-text">Cluster by</span></a></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_uv">UV:<span id="busuanzi_value_site_uv"></span></span></div> <span class="post-meta-divider">|</span><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_pv">PV:<span id="busuanzi_value_site_pv"></span></span></div><div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">laiyy</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span class="post-meta-item-text">网站总字数&#58;</span> <span title="网站总字数">151.9k 字</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script></body></html><script type="text/javascript" src="/js/src/clipboard.min.js"></script><script type="text/javascript" src="/js/src/clipboard-use.js"></script>

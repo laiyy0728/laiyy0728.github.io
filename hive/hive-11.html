@@ -1,0 +1,316 @@
+<!DOCTYPE html><html class="theme-next gemini use-motion" lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#222"><script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script><link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet"><style>.pace .pace-progress{background:#1e92fb;height:3px}.pace .pace-progress-inner{box-shadow:0 0 10px #1e92fb,0 0 5px #1e92fb}.pace .pace-activity{border-top-color:#1e92fb;border-left-color:#1e92fb}</style><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"><link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css"><link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css"><link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4"><link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222"><link rel="manifest" href="/images/manifest.json"><meta name="keywords" content="hive,"><link rel="alternate" href="/atom.xml" title="Laiyy 的个人小站" type="application/atom+xml"><meta name="description" content="Hive 和普通的数据库一样也有一些常用函数。如果：NVL、CASE WHEN、时间转换等。"><meta name="keywords" content="hive"><meta property="og:type" content="article"><meta property="og:title" content="Hive(十一) &lt;BR&#x2F;&gt; 常用函数"><meta property="og:url" content="https://www.laiyy.top/hive/hive-11.html"><meta property="og:site_name" content="Laiyy 的个人小站"><meta property="og:description" content="Hive 和普通的数据库一样也有一些常用函数。如果：NVL、CASE WHEN、时间转换等。"><meta property="og:locale" content="zh-Hans"><meta property="og:updated_time" content="2020-01-07T03:28:54.000Z"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Hive(十一) &lt;BR&#x2F;&gt; 常用函数"><meta name="twitter:description" content="Hive 和普通的数据库一样也有一些常用函数。如果：NVL、CASE WHEN、时间转换等。"><script type="text/javascript" id="hexo.configurations">var NexT=window.NexT||{},CONFIG={root:"/",scheme:"Gemini",version:"5.1.4",sidebar:{position:"left",display:"post",offset:12,b2t:!1,scrollpercent:!0,onmobile:!1},fancybox:!0,tabs:!0,motion:{enable:!0,async:!1,transition:{post_block:"fadeIn",post_header:"slideDownIn",post_body:"slideDownIn",coll_header:"slideLeftIn",sidebar:"slideUpIn"}},duoshuo:{userId:"0",author:"博主"},algolia:{applicationID:"",apiKey:"",indexName:"",hits:{per_page:10},labels:{input_placeholder:"Search for Posts",hits_empty:"We didn't find any results for the search: ${query}",hits_stats:"${hits} results found in ${time} ms"}}}</script><link rel="canonical" href="https://www.laiyy.top/hive/hive-11.html"><title>Hive(十一)<br> 常用函数 | Laiyy 的个人小站</title><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style></head><body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans"><div class="container sidebar-position-left page-post-detail"><div class="headband"></div> <a href="https://github.com/laiyy0728" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#151513;color:#fff;position:absolute;top:0;border:0;right:0" aria-hidden="true"><path d="M0 0 115 115 130 115 142 142 250 250 250 0Z"/><path d="M128.3 109C113.8 99.7 119 89.6 119 89.6 122 82.7 120.5 78.6 120.5 78.6 119.2 72 123.4 76.3 123.4 76.3 127.3 80.9 125.5 87.3 125.5 87.3 122.9 97.6 130.6 101.9 134.4 103.2" fill="currentColor" style="transform-origin:130px 106px" class="octo-arm"/><path d="M115 115C114.9 115.1 118.7 116.5 119.8 115.4L133.7 101.6C136.9 99.2 139.9 98.4 142.2 98.6 133.8 88 127.5 74.4 143.8 58 148.5 53.4 154 51.2 159.7 51 160.3 49.4 163.2 43.6 171.4 40.1 171.4 40.1 176.1 42.5 178.8 56.2 183.1 58.6 187.2 61.8 190.9 65.4 194.5 69 197.7 73.2 200.1 77.6 213.8 80.2 216.3 84.9 216.3 84.9 212.7 93.1 206.9 96 205.4 96.6 205.1 102.4 203 107.8 198.3 112.5 181.9 128.9 168.3 122.5 157.7 114.1 157.9 116.9 156.7 120.9 152.7 124.9L141 136.5C139.8 137.7 141.6 141.9 141.8 141.8Z" fill="currentColor" class="octo-body"/></svg></a><header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader"><div class="header-inner"><div class="site-brand-wrapper"><div class="site-meta"><div class="custom-logo-site-title"><a href="/" class="brand" rel="start"><span class="logo-line-before"><i></i></span> <span class="site-title">Laiyy 的个人小站</span><span class="logo-line-after"><i></i></span></a></div><p class="site-subtitle"></p></div><div class="site-nav-toggle"> <button><span class="btn-bar"></span><span class="btn-bar"></span><span class="btn-bar"></span></button></div></div><nav class="site-nav"><ul id="menu" class="menu"><li class="menu-item menu-item-首页"><a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i><br> 首页</a></li><li class="menu-item menu-item-关于我"><a href="/about" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i><br> 关于我</a></li><li class="menu-item menu-item-标签"><a href="/tags" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i><br> 标签</a></li><li class="menu-item menu-item-分类"><a href="/categories" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i><br> 分类</a></li><li class="menu-item menu-item-归档"><a href="/archives" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i><br> 归档</a></li><li class="menu-item menu-item-search"><a href="javascript:;" class="popup-trigger"><i class="menu-item-icon fa fa-search fa-fw"></i><br> 搜索</a></li></ul><div class="site-search"><div class="popup search-popup local-search-popup"><div class="local-search-header clearfix"><span class="search-icon"><i class="fa fa-search"></i></span><span class="popup-btn-close"><i class="fa fa-times-circle"></i></span><div class="local-search-input-wrapper"> <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input"></div></div><div id="local-search-result"></div></div></div></nav></div></header><main id="main" class="main"><div class="main-inner"><div class="content-wrap"><div id="content" class="content"><div id="posts" class="posts-expand"><article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"><div class="post-block"><link itemprop="mainEntityOfPage" href="https://www.laiyy.top/hive/hive-11.html"><span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person"><meta itemprop="name" content="Laiyy"><meta itemprop="description" content=""><meta itemprop="image" content="/images/icon.jpg"></span><span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization"><meta itemprop="name" content="Laiyy 的个人小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Hive(十一)<br> 常用函数</h1><div class="post-meta"><span class="post-time"><span class="post-meta-item-icon"><i class="fa fa-calendar-o"></i></span> <span class="post-meta-item-text">发表于</span> <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-07T11:28:54+08:00">2020-01-07</time></span> <span class="post-category"><span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-folder-o"></i></span> <span class="post-meta-item-text">分类于</span> <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/hive/" itemprop="url" rel="index"><span itemprop="name">hive</span></a></span></span><div class="post-wordcount"> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-file-word-o"></i></span> <span class="post-meta-item-text">字数统计&#58;</span> <span title="字数统计">1.3k 字</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-clock-o"></i></span> <span class="post-meta-item-text">阅读时长 &asymp;</span> <span title="阅读时长">6 分钟</span></div></div></header><div class="post-body" itemprop="articleBody"><p>Hive 和普通的数据库一样也有一些常用函数。如果：NVL、CASE WHEN、时间转换等。</p><a id="more"></a><h1 id="常用查询函数"><a href="#常用查询函数" class="headerlink" title="常用查询函数"></a>常用查询函数</h1><h2 id="空字段赋值-NVL"><a href="#空字段赋值-NVL" class="headerlink" title="空字段赋值 NVL"></a>空字段赋值 NVL</h2><blockquote><p>NVL：给值为 NULL 的数据赋值，语法为： NVL(str, replace_with)</p></blockquote><p>如果 str 为 NULL，则 NVL 函数返回 replace_with 的值，否则返回 str 的值。<br>如果两个参数都是 NULL，则返回 NULL。</p><p>第二个参数可以传入一个固定的值，也可以传一个表中的列。</p><h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>使用 <a href="/file/hive/emp.txt">员工数据</a> 作测试。</p><blockquote><p>查询员工的 comm 列数据</p></blockquote><p>可以看到 comm 列的数据有 NULL 值存在。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select comm from emp;</span><br><span class="line">OK</span><br><span class="line">comm</span><br><span class="line">NULL</span><br><span class="line">300.0</span><br><span class="line">500.0</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">NULL</span><br><span class="line">NULL</span><br><span class="line">NULL</span><br><span class="line">Time taken: 0.052 seconds, Fetched: 28 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>使用 NVL 查询 comm 列数据，为 NULL 的置为 -1</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select nvl(comm, -1) from emp;</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">-1.0</span><br><span class="line">300.0</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">-1.0</span><br><span class="line">-1.0</span><br><span class="line">-1.0</span><br><span class="line">Time taken: 0.063 seconds, Fetched: 28 row(s)</span><br></pre></td></tr></table></figure><h2 id="时间类"><a href="#时间类" class="headerlink" title="时间类"></a>时间类</h2><p><strong><em>注意：时间转换方面，只支持 yyyy-MM-dd 格式的年月日，和 HH:mm:ss 格式的时分秒。不支持其他时间分隔符。</em></strong><br><strong><em>如果时间格式不是 yyyy-MM-dd HH:mm:ss 格式，可以使用 regexp_replace(date, from, to) 来替换时间。</em></strong><br><strong>如： <code>regexp_replace(&#39;2020/01/07&#39;, &#39;/&#39;, &#39;-&#39;)</code></strong></p><blockquote><p>date_format 格式化时间</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select date_format(&apos;2020-01-07&apos;, &apos;yyyy-MM-dd&apos;);</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">2020-01-07</span><br><span class="line">Time taken: 0.091 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>date_add 时间跟天数相加</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select date_add(&apos;2020-01-07&apos;, 5);</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">2020-01-12</span><br><span class="line">Time taken: 0.062 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>date_sub 时间跟天数相减</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select date_sub(&apos;2020-01-07&apos;, 5);</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">2020-01-02</span><br><span class="line">Time taken: 0.055 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>datediff 两个时间相减</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select datediff(&apos;2020-01-07&apos;, &apos;2020-01-01&apos;);</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">6</span><br><span class="line">Time taken: 0.24 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure><h2 id="CASE-WHEN"><a href="#CASE-WHEN" class="headerlink" title="CASE WHEN"></a>CASE WHEN</h2><p>用途：当 case 的字段符合 when 的条件时，输出某个值。</p><p>使用 <a href="/file/hive/case-when.txt">测试数据</a>，创建数据表</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table emp_sex(name string, dept_id string, sex string) row format delimited fields terminated  by '\t';</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.208 seconds</span><br></pre></td></tr></table></figure><p>需求：输出不同的 dept_id 下，男女各有多少人。</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> dept_id, </span><br><span class="line"><span class="keyword">sum</span>(<span class="keyword">case</span> sex <span class="keyword">when</span> <span class="string">'男'</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">end</span>) male_count, </span><br><span class="line"><span class="keyword">sum</span>(<span class="keyword">case</span> sex <span class="keyword">when</span> <span class="string">'女'</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> <span class="number">0</span> <span class="keyword">end</span>) female_count </span><br><span class="line"><span class="keyword">from</span> emp_sex </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> dept_id;</span><br></pre></td></tr></table></figure><p>查询结果：<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Query ID = root_20200107153632_eb5c0874-e757-4489-b4b1-800eb49293bf</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line">dept_id	male_count	female_count</span><br><span class="line">A	2	2</span><br><span class="line">B	2	1</span><br><span class="line">Time taken: 34.46 seconds, Fetched: 2 row(s)</span><br></pre></td></tr></table></figure><p></p><h2 id="行列转换"><a href="#行列转换" class="headerlink" title="行列转换"></a>行列转换</h2><h3 id="行转列"><a href="#行转列" class="headerlink" title="行转列"></a>行转列</h3><blockquote><p>CONCAT(str A/col, str B/col …)</p></blockquote><p>返回输入字符串连接后的结果，支持任意个输入字符串。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select concat(deptno, &apos;-&apos;, dname) from dept;</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">10-ACCOUNTING</span><br><span class="line">20-RESEARCH</span><br><span class="line">30-SALES</span><br><span class="line">40-OPERATIONS</span><br><span class="line">Time taken: 0.078 seconds, Fetched: 4 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>CONCAT_WS(separator, str1, str2…)</p></blockquote><p>特殊形式的 CONCAT 函数。第一个参数代表分隔符。分隔符可以是与其余参数一样的字符串，如果分隔符是 NULL，返回值也是 NULL。这个函数会跳过分隔符参数后的的任何 NULL 和空字符串。分隔符将被加载到被连接的字符串之间。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select concat_ws(&apos;-&apos;, &apos;h&apos;, &apos;e&apos;, &apos;l&apos;, &apos;l&apos;, &apos;o&apos;);</span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">h-e-l-l-o</span><br><span class="line">Time taken: 0.084 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>COLLECT_SET(col)</p></blockquote><p>只接受基本类型数据，主要作用是将某字段的值进行去重、汇总，产生 array 类型字段。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select collect_set(loc) from dept;</span><br><span class="line">Query ID = root_20200107160149_1b18e6d7-20ed-4e5f-b153-2837a5441989</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line">_c0</span><br><span class="line">[1700,1800,1900]</span><br><span class="line">Time taken: 29.301 seconds, Fetched: 1 row(s</span><br></pre></td></tr></table></figure><p><strong>测试：根据 <a href="/file/hive/concat.txt">输入数据</a>，将星座、血型一样的人归类到一起</strong></p><blockquote><p>数据表</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table person_info(</span><br><span class="line">              &gt; name string,</span><br><span class="line">              &gt; constellation string,</span><br><span class="line">              &gt; blood_type string)</span><br><span class="line">              &gt; row format delimited fields terminated by &apos;\t&apos;;</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.396 seconds</span><br></pre></td></tr></table></figure><blockquote><p>查询</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select</span><br><span class="line">              &gt;     concat(constellation, ',', blood_type) constellation_blood_type,</span><br><span class="line">              &gt;     name</span><br><span class="line">              &gt; from person_info;</span><br><span class="line">OK</span><br><span class="line">constellation_blood_type	name</span><br><span class="line">白羊座,A	孙悟空</span><br><span class="line">射手座,B	孙二娘</span><br><span class="line">白羊座,A	猪八戒</span><br><span class="line">白羊座,A	沙悟净</span><br><span class="line">射手座,B	白龙马</span><br><span class="line">白羊座,A	唐三藏</span><br><span class="line">Time taken: 0.049 seconds, Fetched: 6 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>在上例基础上，进行再次查询</p></blockquote><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select constellation_blood_type, concat_ws('|', collect_set(name))</span><br><span class="line">              &gt;     from (</span><br><span class="line">              &gt;         select</span><br><span class="line">              &gt;             concat(constellation, ',', blood_type) constellation_blood_type,</span><br><span class="line">              &gt;             name</span><br><span class="line">              &gt;         from peoson_info )</span><br><span class="line">              &gt;      t1 </span><br><span class="line">              &gt; group by constellation_blood_type;</span><br><span class="line">Query ID = root_20200107162303_31323702-6403-42da-9cc0-294d4ae05870</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">OK</span><br><span class="line">constellation_blood_type	_c1</span><br><span class="line">射手座,A	白龙马</span><br><span class="line">射手座,B	孙二娘</span><br><span class="line">白羊座,A	孙悟空|沙悟净|唐三藏</span><br><span class="line">白羊座,B	猪八戒</span><br><span class="line">Time taken: 24.091 seconds, Fetched: 4 row(s)</span><br></pre></td></tr></table></figure><h3 id="列转行"><a href="#列转行" class="headerlink" title="列转行"></a>列转行</h3><blockquote><p>EXPLODE(col)</p></blockquote><p>将 Hive 一列中复杂的 array 或 map 结构拆分成多行。</p><blockquote><p>LATERAL VIEW（侧写）</p></blockquote><p>用法：LATERAL VIEW udtf(expression) tableAlias as colimnAlias;<br>解释：用于和 split、explode 等 UDTF(一进多出) 一起使用，它能够将一系列数据拆分成多行数据，再此基础上可以对拆分后的数据进行聚合。</p><p><strong><em>所需库表</em></strong></p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table movie_info(</span><br><span class="line">              &gt;     movie string,</span><br><span class="line">              &gt;     category array&lt;string&gt;</span><br><span class="line">              &gt; )</span><br><span class="line">              &gt; row format delimited fields terminated by '\t'</span><br><span class="line">              &gt; collection items terminated by ',';</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.088 seconds</span><br></pre></td></tr></table></figure><p>根据 <a href="/file/hive/explode.txt">测试数据</a></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select explode(category) from movie_info;</span><br><span class="line">OK</span><br><span class="line">col</span><br><span class="line">悬疑</span><br><span class="line">科幻</span><br><span class="line">动作</span><br><span class="line">剧情</span><br><span class="line">悬疑</span><br><span class="line">警匪</span><br><span class="line">动作</span><br><span class="line">剧情</span><br><span class="line">心理</span><br><span class="line">战争</span><br><span class="line">动作</span><br><span class="line">灾难</span><br><span class="line">Time taken: 0.042 seconds, Fetched: 12 row(s)</span><br></pre></td></tr></table></figure><blockquote><p>测试输出电影名称和分类</p></blockquote><p>可以看到测试是不成功的，原因就是 UDTF 不支持<br></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select movie,explode(category) from movie_info;</span><br><span class="line">FAILED: SemanticException [Error 10081]: UDTF&apos;s are not supported outside the SELECT clause, nor nested in expressions</span><br></pre></td></tr></table></figure><p></p><blockquote><p>修改查询方式</p></blockquote><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select movie, category_name from movie_info lateral view explode(category) table_tmp as category_name;</span><br><span class="line">OK</span><br><span class="line">movie	category_name</span><br><span class="line">《疑犯追踪》	悬疑</span><br><span class="line">《疑犯追踪》	科幻</span><br><span class="line">《疑犯追踪》	动作</span><br><span class="line">《疑犯追踪》	剧情</span><br><span class="line">《Lie to me》	悬疑</span><br><span class="line">《Lie to me》	警匪</span><br><span class="line">《Lie to me》	动作</span><br><span class="line">《Lie to me》	剧情</span><br><span class="line">《Lie to me》	心理</span><br><span class="line">《战狼2》	战争</span><br><span class="line">《战狼2》	动作</span><br><span class="line">《战狼2》	灾难</span><br><span class="line">Time taken: 0.062 seconds, Fetched: 12 row(s)</span><br></pre></td></tr></table></figure></div><div><div><div style="text-align:center;color:#bbb;font-size:15px"><br>-------------本文结束<i class="fa fa-paw"></i> 感谢您的阅读-------------</div></div></div><div><ul class="post-copyright"><li class="post-copyright-author"> <strong>本文作者：</strong> Laiyy</li><li class="post-copyright-link"> <strong>本文链接：</strong> <a href="https://www.laiyy.top/hive/hive-11.html" title="Hive(十一) <BR/> 常用函数">https://www.laiyy.top/hive/hive-11.html</a></li><li class="post-copyright-license"> <strong>版权声明：</strong> 本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！</li></ul></div><footer class="post-footer"><div class="post-tags"><a href="/tags/hive/" rel="tag"><i class="fa fa-tag"></i> hive</a></div><div class="post-nav"><div class="post-nav-next post-nav-item"><a href="/hive/hive-10.html" rel="next" title="Hive(十) <BR/> 数据查询（2）"><i class="fa fa-chevron-left"></i> Hive(十)<br> 数据查询（2）</a></div><span class="post-nav-divider"></span><div class="post-nav-prev post-nav-item"> <a href="/hive/hive-12.html" rel="prev" title="Hive(十二) <BR/> 常用函数——窗口函数">Hive(十二)<br> 常用函数——窗口函数<i class="fa fa-chevron-right"></i></a></div></div></footer></div></article><div class="post-spread"><div class="addthis_inline_share_toolbox"><script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5c42b60d6ef7b089" async="async"></script></div></div></div></div></div><div class="sidebar-toggle"><div class="sidebar-toggle-line-wrap"><span class="sidebar-toggle-line sidebar-toggle-line-first"></span><span class="sidebar-toggle-line sidebar-toggle-line-middle"></span><span class="sidebar-toggle-line sidebar-toggle-line-last"></span></div></div><aside id="sidebar" class="sidebar"><div class="sidebar-inner"><ul class="sidebar-nav motion-element"><li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap"> 文章目录</li><li class="sidebar-nav-overview" data-target="site-overview-wrap"> 站点概览</li></ul><section class="site-overview-wrap sidebar-panel"><div class="site-overview"><div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person"> <img class="site-author-image" itemprop="image" src="/images/icon.jpg" alt="Laiyy"><p class="site-author-name" itemprop="name">Laiyy</p><p class="site-description motion-element" itemprop="description">简介</p></div><nav class="site-state motion-element"><div class="site-state-item site-state-posts"> <a href="/archives"><span class="site-state-item-count">88</span> <span class="site-state-item-name">日志</span></a></div><div class="site-state-item site-state-categories"> <a href="/categories/index.html"><span class="site-state-item-count">19</span> <span class="site-state-item-name">分类</span></a></div><div class="site-state-item site-state-tags"> <a href="/tags/index.html"><span class="site-state-item-count">35</span> <span class="site-state-item-name">标签</span></a></div></nav><div class="feed-link motion-element"><a href="/atom.xml" rel="alternate"><i class="fa fa-rss"></i> RSS</a></div><div class="links-of-author motion-element"><span class="links-of-author-item"><a href="https://github.com/laiyy0728" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i> GitHub</a></span><span class="links-of-author-item"><a href="mailto:laiyy0728@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i> E-Mail</a></span><span class="links-of-author-item"><a href="https://www.jianshu.com/u/8fa6bf5f8bd9" target="_blank" title="简  书"><i class="fa fa-fw fa-book"></i> 简 书</a></span></div></div></section><section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active"><div class="post-toc"><div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#常用查询函数"><span class="nav-number">1.</span> <span class="nav-text">常用查询函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#空字段赋值-NVL"><span class="nav-number">1.1.</span> <span class="nav-text">空字段赋值 NVL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">1.1.1.</span> <span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#时间类"><span class="nav-number">1.2.</span> <span class="nav-text">时间类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CASE-WHEN"><span class="nav-number">1.3.</span> <span class="nav-text">CASE WHEN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行列转换"><span class="nav-number">1.4.</span> <span class="nav-text">行列转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#行转列"><span class="nav-number">1.4.1.</span> <span class="nav-text">行转列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列转行"><span class="nav-number">1.4.2.</span> <span class="nav-text">列转行</span></a></li></ol></li></ol></li></ol></div></div></section></div></aside></div></main><footer id="footer" class="footer"><div class="footer-inner"><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_uv">UV:<span id="busuanzi_value_site_uv"></span></span></div> <span class="post-meta-divider">|</span><div class="powered-by"><i class="fa fa-user-md"></i> <span id="busuanzi_container_site_pv">PV:<span id="busuanzi_value_site_pv"></span></span></div><div class="copyright">&copy; 2018 &mdash; <span itemprop="copyrightYear">2020</span><span class="with-love"><i class="fa fa-heart"></i></span> <span class="author" itemprop="copyrightHolder">laiyy</span> <span class="post-meta-divider">|</span><span class="post-meta-item-icon"><i class="fa fa-area-chart"></i></span> <span class="post-meta-item-text">网站总字数&#58;</span> <span title="网站总字数">151.9k 字</span></div></div></footer><div class="back-to-top"><i class="fa fa-arrow-up"></i> <span id="scrollpercent"><span>0</span>%</span></div></div><script type="text/javascript">"[object Function]"!==Object.prototype.toString.call(window.Promise)&&(window.Promise=null)</script><script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script><script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script><script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script><script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script><script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script><script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script><script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script></body></html><script type="text/javascript" src="/js/src/clipboard.min.js"></script><script type="text/javascript" src="/js/src/clipboard-use.js"></script>
